@@ -252,7 +252,6 @@ def test_overlapping_special_tokens():
         special_tokens=["<|endoftext|>", "<|endoftext|><|endoftext|>"],
     )
     test_string = "Hello, how <|endoftext|><|endoftext|> are you?<|endoftext|>"
-
     ids = tokenizer.encode(test_string)
     tokenized_string = [tokenizer.decode([x]) for x in ids]
     # Ensure the double <|endoftext|><|endoftext|> is preserved as a single token
@@ -283,8 +282,10 @@ def test_address_matches_tiktoken():
     corpus_path = FIXTURES_PATH / "address.txt"
     with open(corpus_path) as f:
         corpus_contents = f.read()
+    # corpus_contents = "field of that war."
     reference_ids = reference_tokenizer.encode(corpus_contents)
     ids = tokenizer.encode(corpus_contents)
+
     assert ids == reference_ids
 
     assert tokenizer.decode(ids) == corpus_contents
@@ -422,9 +423,10 @@ def test_encode_iterable_memory_usage():
         vocab_path=VOCAB_PATH,
         merges_path=MERGES_PATH,
     )
+    from tqdm import tqdm
     with open(FIXTURES_PATH / "tinystories_sample_5M.txt") as f:
         ids = []
-        for _id in _encode_iterable(tokenizer, f):
+        for _id in tqdm(_encode_iterable(tokenizer, f)):
             ids.append(_id)
 
 

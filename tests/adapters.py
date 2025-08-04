@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import os
+import sys
 from typing import IO, Any, BinaryIO
 from collections.abc import Iterable
 from jaxtyping import Float, Int
@@ -8,6 +9,7 @@ from jaxtyping import Float, Int
 import numpy.typing as npt
 import torch
 from torch import Tensor
+sys.path.append("/root/assignment1-basics/cs336_basics")
 
 
 def run_linear(
@@ -539,6 +541,7 @@ def run_load_checkpoint(
     raise NotImplementedError
 
 
+import BPETokenizer
 def get_tokenizer(
     vocab: dict[int, bytes],
     merges: list[tuple[bytes, bytes]],
@@ -559,8 +562,12 @@ def get_tokenizer(
     Returns:
         A BPE tokenizer that uses the provided vocab, merges, and special tokens.
     """
-    raise NotImplementedError
+    return BPETokenizer.BPETokenizer(vocab, merges, special_tokens)
 
+
+
+# 添加你要导入模块所在的绝对路径
+import train_bpe
 
 def run_train_bpe(
     input_path: str | os.PathLike,
@@ -589,4 +596,4 @@ def run_train_bpe(
                 representing that <token1> was merged with <token2>.
                 Merges are ordered by order of creation.
     """
-    raise NotImplementedError
+    return train_bpe.train_bpe(input_path, vocab_size, special_tokens)
