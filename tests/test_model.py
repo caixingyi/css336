@@ -157,7 +157,7 @@ def test_transformer_lm_truncated_input(
 
 def test_transformer_block(numpy_snapshot, ts_state_dict, in_embeddings, d_model, n_heads, d_ff, n_keys, theta):
     block_weights = {k.replace("layers.0.", ""): v for k, v in ts_state_dict[0].items() if "layers.0." in k}
-
+    # print(block_weights.keys())
     actual_output = run_transformer_block(
         d_model=d_model,
         num_heads=n_heads,
