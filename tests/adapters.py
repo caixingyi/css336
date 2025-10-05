@@ -383,6 +383,14 @@ def run_transformer_lm(
         device=device,
         dtype=dtype
     ).eval()  
+    # print(model.parameters)
+    # 方法1：查看参数数量
+    print(f"Total params: {sum(p.numel() for p in model.parameters())}")
+
+    # 方法2：列出每个参数的形状
+    for name, param in model.named_parameters():
+        print(name, param.shape)
+
     from layer import _copy_param
     with torch.no_grad():
         # (a) token embedding  (also implicitly ties lm_head)
@@ -497,6 +505,8 @@ def run_softmax(in_features: Float[Tensor, " ..."], dim: int) -> Float[Tensor, "
     """
     return layer.softmax(in_features, dim)
 
+from train import *
+
 def run_cross_entropy(
     inputs: Float[Tensor, " batch_size vocab_size"], targets: Int[Tensor, " batch_size"]
 ) -> Float[Tensor, ""]:
@@ -512,7 +522,7 @@ def run_cross_entropy(
     Returns:
         Float[Tensor, ""]: The average cross-entropy loss across examples.
     """
-    raise NotImplementedError
+    return cross_entropy(inputs, targets)
 
 
 def run_gradient_clipping(parameters: Iterable[torch.nn.Parameter], max_l2_norm: float) -> None:
@@ -524,14 +534,14 @@ def run_gradient_clipping(parameters: Iterable[torch.nn.Parameter], max_l2_norm:
 
     The gradients of the parameters (parameter.grad) should be modified in-place.
     """
-    raise NotImplementedError
+    return gradient_clipping(parameters, max_l2_norm)
 
-
+from optimizer import *
 def get_adamw_cls() -> Any:
     """
     Returns a torch.optim.Optimizer that implements AdamW.
     """
-    raise NotImplementedError
+    return AdamW
 
 
 def run_get_lr_cosine_schedule(
@@ -559,7 +569,7 @@ def run_get_lr_cosine_schedule(
     Returns:
         Learning rate at the given iteration under the specified schedule.
     """
-    raise NotImplementedError
+    return lr_cosine_schedule(it, max_learning_rate, min_learning_rate, warmup_iters, cosine_cycle_iters)
 
 
 def run_save_checkpoint(
